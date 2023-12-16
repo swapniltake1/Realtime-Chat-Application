@@ -1,0 +1,17 @@
+package com.chatapp.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.chatapp.exception.UserException;
+import com.chatapp.model.User;
+import com.chatapp.request.UpdateUserReq;
+
+public interface UserService {
+
+	public User finyById(Integer id);
+	public User findUserByProfile(String jwt);
+	public User updateUser(Integer id, UpdateUserReq req) throws UserException;
+	public List<User> searchUser(String query);
+}

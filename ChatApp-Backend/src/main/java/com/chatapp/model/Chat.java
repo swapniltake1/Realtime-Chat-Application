@@ -29,6 +29,9 @@ public class Chat {
 	private String chatImg;
 	private boolean isGroup;
 	
+	@ManyToMany
+	private Set<User> admins= new HashSet<>();
+	
 	@ManyToOne            // only one user can create chat
 	private User createdBy;
 	

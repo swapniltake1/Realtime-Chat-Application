@@ -27,6 +27,13 @@ public class GlobalExceptions {
 		return new ResponseEntity<ErrorDetails>(error, HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(ChatException.class)
+	public ResponseEntity<ErrorDetails> ChatExceptionHandler(ChatException e6, WebRequest req) {
+		
+		ErrorDetails error=new ErrorDetails(e6.getMessage(),e6.getMessage(), LocalDateTime.now());
+		return new ResponseEntity<ErrorDetails>(error, HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorDetails> MethodArgumentsNotValidExceptionHandler(MethodArgumentNotValidException e3, WebRequest req) {
 		String err = e3.getBindingResult().getFieldError().getDefaultMessage();

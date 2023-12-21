@@ -43,6 +43,8 @@ const Profile = () => {
 
         </div>
 
+        { /* this is sepdrate  */}
+
         <div className='bg-white'>
 
             <p className='px-3 py-3'>Your Name</p>

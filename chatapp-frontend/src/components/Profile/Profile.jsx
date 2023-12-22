@@ -2,14 +2,12 @@ import React, { useState } from 'react';
 import { BsArrowLeft, BsCheck, BsCheck2, BsPencil } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
-const Profile = () => {
+const Profile = ({HandleCloseOpenProfile}) => {
     const navigate = useNavigate();
     const [flag, setFlag] = useState(false);
     const [username, setusername] = useState(null);
 
-    const handleArrowclick =()=>{
-        navigate(-1);
-    }
+        
 
     const HandleFlag =()=>{
         setFlag(true);
@@ -29,7 +27,7 @@ const Profile = () => {
 
         <div className='flex items-center -space-x-10 bg-cyan-600 text-white pt-16 px-10 pb-5 justify-between '>
 
-            <BsArrowLeft className='cursor-pointer text-2xl font-bold' onClick={handleArrowclick} />
+            <BsArrowLeft className='cursor-pointer text-2xl font-bold' onClick={HandleCloseOpenProfile} />
             <p className='font-semibold cursor-pointer' > Profile </p>
 
         </div>

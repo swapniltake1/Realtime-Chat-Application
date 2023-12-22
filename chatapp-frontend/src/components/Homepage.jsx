@@ -14,7 +14,7 @@ const Homepage = () => {
     const [query, setQuery] = useState('');
     const [currentChat, setcurrentChat] = useState('');
     const [content, setcontent] = useState('');
-    const [isprofile, setisprofile] = useState('false');
+    const [isprofile, setisprofile] = useState(false);
 
     const handleSearch = (value) => {
         setQuery(value);
@@ -33,6 +33,10 @@ const Homepage = () => {
         setisprofile(true);
     }
 
+    const HandleCloseOpenProfile = () =>{
+        setisprofile(false);
+    }
+
     return (
         <>
             <div className='relative'>
@@ -46,7 +50,7 @@ const Homepage = () => {
 
                         {isprofile && 
                             <div className='w-full h-full'>
-                                <  Profile />
+                                <  Profile HandleCloseOpenProfile={HandleCloseOpenProfile} />
                                 </div>
 
                             }
@@ -69,10 +73,11 @@ const Homepage = () => {
                                             alt="profile"
                                         />
                                         <p>Username</p>
+
                                     </div>
 
                                     <div className='space-x-3 text-2xl flex items-center'>
-                                        <TbCircleDashed />
+                                        <TbCircleDashed  className='cursor-pointer' onClick={()=> navigate("/status")} />
                                         <BiCommentDetail />
                                     </div>
                                 </div>

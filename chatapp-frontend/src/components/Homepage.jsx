@@ -8,6 +8,10 @@ import MessageCard from './MessageCard/MessageCard';
 import { ImAttachment } from "react-icons/im"
 import { useNavigate } from 'react-router-dom';
 import Profile from './Profile/Profile';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import CreateGroup from './Group/CreateGroup';
 
 const Homepage = () => {
     const navigate = useNavigate();
@@ -15,6 +19,9 @@ const Homepage = () => {
     const [currentChat, setcurrentChat] = useState('');
     const [content, setcontent] = useState('');
     const [isprofile, setisprofile] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const [isGroup, setIsGroup] = useState(false);
 
     const handleSearch = (value) => {
         setQuery(value);
@@ -33,9 +40,24 @@ const Homepage = () => {
         setisprofile(true);
     }
 
-    const HandleCloseOpenProfile = () =>{
+    const HandleCloseOpenProfile = () => {
         setisprofile(false);
     }
+
+    const handleClick = (e) => {
+        setAnchorEl(e.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleCreateGroup =()=>{
+      setIsGroup(true);
+    };
+
+    const handleLogOut=()=>{
+
+    };
 
     return (
         <>
@@ -47,23 +69,24 @@ const Homepage = () => {
 
                     <div className='left w-[30%] h-full bg-[#e8e9ec]'>
                         {/* profile added here  */}
+                        {isGroup && <CreateGroup />}
 
-                        {isprofile && 
+                        {isprofile &&
                             <div className='w-full h-full'>
                                 <  Profile HandleCloseOpenProfile={HandleCloseOpenProfile} />
-                                </div>
+                            </div>
 
-                            }
+                        }
 
-                            {/* Home */}
-                            {!isprofile &&
-                             <div className='w-full'>
-
-                            
+                        {/* Home */}
+                        {!isprofile && !isGroup &&
+                            <div className='w-full'>
 
 
 
-                            
+
+
+
                                 < div className='flex justify-between items-center p-3'>
 
                                     <div onClick={HandleNavigate} className='flex items-center space-x-3'>
@@ -77,40 +100,67 @@ const Homepage = () => {
                                     </div>
 
                                     <div className='space-x-3 text-2xl flex items-center'>
-                                        <TbCircleDashed  className='cursor-pointer' onClick={()=> navigate("/status")} />
+                                        <TbCircleDashed className='cursor-pointer' onClick={() => navigate("/status")} />
                                         <BiCommentDetail />
+                                        <div>
+
+                                            
+                                               <BsThreeDotsVertical  id="basic-button"
+                                                aria-controls={open ? 'basic-menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={open ? 'true' : undefined}
+                                                onClick={handleClick} />
+
+                                            
+                                            
+                                            <Menu
+                                                id="basic-menu"
+                                                anchorEl={anchorEl}
+                                                open={open}
+                                                onClose={handleClose}
+                                                MenuListProps={{
+                                                    'aria-labelledby': 'basic-button',
+                                                }}
+                                            >
+                                                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                                                <MenuItem onClick={handleCreateGroup}>Create Group</MenuItem>
+                                                <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+                                            </Menu>
+
+                                        </div>
+
                                     </div>
                                 </div>
-                            
 
 
-                            <div className='relative flex justify-center items-center bg-white py-4 px-3'>
-                                <input
-                                    className='border-none outline-none bg-slate-200 rounded-md w-[93%] pl-9 py-2'
-                                    type='text'
-                                    placeholder='Search your chats'
-                                    onChange={(e) => handleSearch(e.target.value)}
-                                    value={query}
-                                />
-                                <AiOutlineSearch className='left-5 top-7 absolute' />
 
-                                <div>
-                                    <BsFilter className='ml-4 text-3xl' />
+                                <div className='relative flex justify-center items-center bg-white py-4 px-3'>
+                                    <input
+                                        className='border-none outline-none bg-slate-200 rounded-md w-[93%] pl-9 py-2'
+                                        type='text'
+                                        placeholder='Search your chats'
+                                        onChange={(e) => handleSearch(e.target.value)}
+                                        value={query}
+                                    />
+                                    <AiOutlineSearch className='left-5 top-7 absolute' />
+
+                                    <div>
+                                        <BsFilter className='ml-4 text-3xl' />
+                                    </div>
+
                                 </div>
 
+                                <div className='bg-white overflow-y-auto h-[70vh] px-3'>
+                                    {/* Dummy Array*/}
+                                    {query && [1, 2, 3, 4, 5, 6, 7, 9, 10].map((item) => (
+                                        <div key={item} onClick={HandleClickOnChat}>
+                                            <hr />
+                                            <ChatCard />
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-
-                            <div className='bg-white overflow-y-auto h-[70vh] px-3'>
-                                {/* Dummy Array*/}
-                                {query && [1, 2, 3, 4, 5, 6, 7, 9, 10].map((item) => (
-                                    <div key={item} onClick={HandleClickOnChat}>
-                                        <hr />
-                                        <ChatCard />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                         }
+                        }
                     </div>
 
                     <div className='w-[70%]'>

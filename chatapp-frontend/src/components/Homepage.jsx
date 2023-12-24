@@ -122,7 +122,7 @@ const Homepage = () => {
                                                     'aria-labelledby': 'basic-button',
                                                 }}
                                             >
-                                                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                                                <MenuItem onClick={HandleNavigate}>Profile</MenuItem>
                                                 <MenuItem onClick={handleCreateGroup}>Create Group</MenuItem>
                                                 <MenuItem onClick={handleLogOut}>Logout</MenuItem>
                                             </Menu>
@@ -168,8 +168,8 @@ const Homepage = () => {
                             <div class='right flex items-center justify-center h-full'>
                                 <div class='w-[70%] flex flex-col items-center justify-center h-full'>
                                     <div class='max-w-[70%] text-center'>
-                                        <img src="https://cdn.pixabay.com/photo/2023/02/01/19/42/man-7761156_1280.jpg" alt="profilepic main chat" class='mx-auto' />
-                                        <h1 class='text-4xl'>Welcome to realtime chat application</h1>
+                                        <img src="https://www.pngall.com/wp-content/uploads/10/Message-Silhouette-Background-PNG-Image.png" alt="profilepic main chat" class='h-[20rem] w-[20rem]' />
+                                        <h1 class='text-4xl'>Welcome to Chat App</h1>
                                         <p class='my-9'>Created by swapnil take @2023 all rights reserved</p>
                                     </div>
                                 </div>

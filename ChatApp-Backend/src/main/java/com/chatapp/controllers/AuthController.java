@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import com.chatapp.service.CustomUserService;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin
 public class AuthController {
 
 	@Autowired
@@ -65,6 +67,7 @@ public class AuthController {
 		return new ResponseEntity<AuthResponse>(res, HttpStatus.ACCEPTED);
 	}
 	
+	@PostMapping("/signin")
 	public ResponseEntity<AuthResponse> loginHandler(@RequestBody Loginreq req) {
 		String email = req.getEmail();
 		String password = req.getPassword();

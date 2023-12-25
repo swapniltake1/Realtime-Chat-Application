@@ -43,7 +43,7 @@ export const currentUser = (token) => async(dispatch)=>{
        const res=await fetch(`${BASE_API_URL}/api/users/profile`, {
             method:"GET",
             headers:{
-                "Content-Type":`application/json`,
+                "Content-Type":"application/json",
                 Authorization:`Bearer ${token}`
             }, 
             

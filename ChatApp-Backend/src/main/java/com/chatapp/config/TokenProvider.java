@@ -14,29 +14,30 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class TokenProvider {
-	
-	SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256; // Choose your preferred algorithm
-	SecretKey key = Keys.secretKeyFor(signatureAlgorithm);
-	
-	public String generateToken(Authentication authentication) {
-		String jwt = Jwts.builder()
-				      .setIssuer("the_codebreaker")
-				      .setIssuedAt(new Date())
-				      .setExpiration(new Date(new Date().getTime()+8640000))  // expire after 24hr
-				      .claim("email", authentication.getName())
-				      .signWith(key)
-				      .compact();
-		return jwt;
-				      
-	}
-	
-	public String getEmailFromToken(String jwt) {
-		
-		jwt = jwt.substring(7);
-		Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-		String email=String.valueOf(claims.get("email"));
-		
-		return email;
-	}
+    
+    // Define the key as a SecretKey
+    SecretKey key = Keys.hmacShaKeyFor(JwtConstants.SECRET_KEY.getBytes()); // Assuming SECRET_KEY is a String
 
+    public String generateToken(Authentication authentication) {
+        
+        System.out.println("Generated token at time of creation :: " + key);
+        
+        String jwt = Jwts.builder()
+                .setIssuer("the_codebreaker")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + 8640000)) // expire after 24hr
+                .claim("email", authentication.getName())
+                .signWith(key, SignatureAlgorithm.HS256) // Sign with the key and algorithm
+                .compact();
+        return jwt;
+    }
+
+    public String getEmailFromToken(String jwt) {
+
+        jwt = jwt.substring(7);
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+        String email = String.valueOf(claims.get("email"));
+
+        return email;
+    }
 }

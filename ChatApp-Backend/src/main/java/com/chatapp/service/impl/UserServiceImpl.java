@@ -39,7 +39,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findUserByProfile(String jwt) throws UserException {
+		
 		String email = tokenProvider.getEmailFromToken(jwt);
+		System.out.println("user email :: "+email);
+		
 		if(email==null) {
 		throw new BadCredentialsException("Invalid token ");
 		}
@@ -47,6 +50,7 @@ public class UserServiceImpl implements UserService {
 		if(user == null) {
 			throw new UserException("User not found with this email :: "+email);
 		}
+		System.out.println("User :: "+user);
 		return user;
 	}
 	

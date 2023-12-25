@@ -30,15 +30,19 @@ const SignUp = () => {
     };
 
 
-    useEffect(()=>{
-      if(token)dispatch(currentUser(token))
-    },[token])
+    useEffect(() => {
+        if (token) {
+            dispatch(currentUser(token));
+        }
+    }, [token, dispatch]);
 
-    useEffect(()=>{
-     if(auth.reqUser?.fullName){
-        navigate("/");
-     }
-    }, [auth.reqUser])
+    useEffect(() => {
+        console.log("Auth State:", auth); 
+        if (auth.reqUser?.fullName) {
+            console.log("Navigating to Home");
+            navigate("/");
+        }
+    }, [auth, navigate]);
     
 
     return (

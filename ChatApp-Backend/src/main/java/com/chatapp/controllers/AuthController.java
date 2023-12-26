@@ -74,6 +74,7 @@ public class AuthController {
 		
 		// cheking username and password .
 		Authentication authentication = authenticateReq(email, password);
+		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
         String jwt = tokenProvider.generateToken(authentication);

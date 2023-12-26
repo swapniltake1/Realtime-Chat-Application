@@ -13,6 +13,12 @@ const SignUp = () => {
     const token = localStorage.getItem("token");
 
 
+    useEffect(() => {
+        if (token && !auth.reqUser) {
+            dispatch(currentUser(token));
+        }
+    }, [token, auth.reqUser, dispatch]);
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         setOpenSnackBar(true);
@@ -29,17 +35,8 @@ const SignUp = () => {
         setOpenSnackBar(false);
     };
 
-
-    useEffect(() => {
-        if (token) {
-            dispatch(currentUser(token));
-        }
-    }, [token, dispatch]);
-
-    useEffect(() => {
-        console.log("Auth State:", auth); 
+    useEffect(() => { 
         if (auth.reqUser?.fullName) {
-            console.log("Navigating to Home");
             navigate("/");
         }
     }, [auth, navigate]);

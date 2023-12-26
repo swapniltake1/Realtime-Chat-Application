@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TbCircleDashed } from "react-icons/tb";
 import { BiCommentDetail } from "react-icons/bi";
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -12,6 +12,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import CreateGroup from './Group/CreateGroup';
+import { useDispatch, useSelector } from 'react-redux';
+import { currentUser, logoutUser } from '../Redux/Auth/Action';
 
 const Homepage = () => {
     const navigate = useNavigate();
@@ -22,6 +24,10 @@ const Homepage = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [isGroup, setIsGroup] = useState(false);
+    const dispatch = useDispatch();
+    const {auth} = useSelector(store => store);
+    const token = localStorage.getItem("token");
+
 
     const handleSearch = (value) => {
         setQuery(value);
@@ -56,8 +62,30 @@ const Homepage = () => {
     };
 
     const handleLogOut=()=>{
+        dispatch(logoutUser());
+        navigate("/signin")
 
     };
+
+    useEffect(() => {
+        if (token && !auth.reqUser ) {
+            console.log("Getting your Profile.....");
+            dispatch(currentUser(token));
+        }
+        
+    }, [token, auth.reqUser]);
+    
+    useEffect(() => {
+        if (auth.reqUser?.fullName) {
+            navigate("/");
+        } 
+    }, [auth.reqUser]);
+
+    
+
+  
+   
+
 
     return (
         <>
@@ -95,7 +123,7 @@ const Homepage = () => {
                                             src="https://cdn.pixabay.com/photo/2018/03/27/21/43/startup-3267505_640.jpg"
                                             alt="profile"
                                         />
-                                        <p>Username</p>
+                                        <p>{ auth.reqUser?.fullName }</p>
 
                                     </div>
 
@@ -169,8 +197,10 @@ const Homepage = () => {
                                 <div class='w-[70%] flex flex-col items-center justify-center h-full'>
                                     <div class='max-w-[70%] text-center'>
                                         <img src="https://www.pngall.com/wp-content/uploads/10/Message-Silhouette-Background-PNG-Image.png" alt="profilepic main chat" class='h-[20rem] w-[20rem]' />
-                                        <h1 class='text-4xl'>Welcome to Chat App</h1>
-                                        <p class='my-9'>Created by swapnil take @2023 all rights reserved</p>
+                                        <h1 class='text-4xl mt-5'>Welcome, {auth.reqUser?.fullName?.split(' ')[0]}</h1>
+
+                                        <p class='text-gray-500 text-sm mt-5 '>Designed & Developed by Swapnil Take © 2023. All Rights Reserved.</p>
+
                                     </div>
                                 </div>
                             </div>

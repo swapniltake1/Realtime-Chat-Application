@@ -1,22 +1,38 @@
-import { LOGIN, REGISTER, REQ_USER, SEARCH_USER, UPDATE_USER } from "./ActionType";
-
-const initialValue = {
-   signup: null,
-   signin: null,
-   reqUser: null
-};
-
-export const authReducer = (store = initialValue, { type, payload }) => {
+import {
+    REGISTER,
+    LOGIN_USER,
+    REQ_USER,
+    SEARCH_USER,
+    UPDATE_USER,
+    LOGOUT_USER
+  } from "./ActionType";
+  
+  const initialState = {
+    signin: null,
+    signup: null,
+    reqUser: ""
+  };
+  
+  export const authReducer = (state = initialState, { type, payload }) => {
     if (type === REGISTER) {
-        return { ...store, signup: payload };
-    } else if (type === LOGIN) {
-        return { ...store, signin: payload };
+      return { ...state, signup: payload };
+    } else if (type === LOGIN_USER) {
+      return { ...state, signin: payload };
     } else if (type === REQ_USER) {
-        return { ...store, reqUser: payload };
+      return { ...state, reqUser: payload };
     } else if (type === SEARCH_USER) {
-        return { ...store, searchUser: payload };
+      return { ...state, searchUser: payload };
     } else if (type === UPDATE_USER) {
-        return { ...store, updatedUser: payload };
+      return { ...state, updatedUser: payload };
+    } else if (type === LOGOUT_USER) {
+      return {
+        ...state,
+        signin: null,
+        signup: null,
+        reqUser: null
+      };
+    } else {
+      return state;
     }
-    return store;
-};
+  };
+  

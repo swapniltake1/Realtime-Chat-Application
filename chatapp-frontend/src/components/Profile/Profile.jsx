@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { BsArrowLeft, BsCheck, BsCheck2, BsPencil } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = ({HandleCloseOpenProfile}) => {
     const navigate = useNavigate();
     const [flag, setFlag] = useState(false);
     const [username, setusername] = useState(null);
+    const {auth} = useSelector(store=>store);
 
         
 
@@ -45,11 +47,11 @@ const Profile = ({HandleCloseOpenProfile}) => {
 
         <div className='bg-white'>
 
-            <p className='px-3 py-3'>Your Name</p>
+            <p className='px-3 py-3'></p>
 
             { !flag &&
             <div className='w-full flex justify-between items-center'>
-                <p className=' px-3 py-3'>{ username || "Swapniltake1"}</p>
+                <p className=' px-3 py-3'>{ auth.reqUser?.fullName || "Swapniltake1"}</p>
                 <BsPencil onClick={HandleFlag} className='cursor-pointer mr-3' />
             </div>
                }

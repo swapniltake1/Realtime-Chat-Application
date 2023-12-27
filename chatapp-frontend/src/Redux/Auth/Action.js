@@ -66,6 +66,7 @@ export const currentUser = (token) => async (dispatch) => {
 };
 
 export const searchUser = (data) => async (dispatch) => {
+  console.log("Searching for ::: ", data);
   try {
     const res = await fetch(
       `${BASE_API_URL}/api/users/search?name=${data.keyword}`,
@@ -79,6 +80,7 @@ export const searchUser = (data) => async (dispatch) => {
     );
 
     const resData = await res.json();
+    console.log("Searched Usrr",resData);
     dispatch({ type: SEARCH_USER, payload: resData });
   } catch (error) {
     console.error('Search user error:', error);

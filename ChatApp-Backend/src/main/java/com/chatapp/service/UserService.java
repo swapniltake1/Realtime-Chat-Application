@@ -12,4 +12,6 @@ public interface UserService {
 	public User findUserByProfile(String jwt) throws UserException;
 	public User updateUser(Integer id, UpdateUserReq req) throws UserException;
 	public List<User> searchUser(String query);
+	public List<User> searchByUserName(String name);
+	
 }

@@ -40,6 +40,7 @@ public class MessageServiceImpl implements MessageService {
 		message.setUser(user);
 		message.setContent(req.getContent());
 		message.setTimestamp(LocalDateTime.now());
+		messageRepository.save(message); 
 		return message;
 	}
 

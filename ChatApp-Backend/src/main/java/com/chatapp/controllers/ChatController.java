@@ -25,7 +25,7 @@ import com.chatapp.service.ChatService;
 import com.chatapp.service.UserService;
 
 @RestController
-@RequestMapping("/api/chats")
+@RequestMapping("/api/chats/")
 public class ChatController {
 
 	@Autowired

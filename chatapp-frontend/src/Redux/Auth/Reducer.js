@@ -10,7 +10,10 @@ import {
   const initialState = {
     signin: null,
     signup: null,
-    reqUser: ""
+    reqUser: null,
+    searchUser: [],
+    updatedUser: null,
+
   };
   
   export const authReducer = (state = initialState, { type, payload }) => {

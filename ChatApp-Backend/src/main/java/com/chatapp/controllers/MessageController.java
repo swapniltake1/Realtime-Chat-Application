@@ -39,6 +39,7 @@ public class MessageController {
 		User user = userService.findUserByProfile(jwt);
 		req.setUserId(user.getId());
 		Message sentMessage = messageService.sentMessage(req);
+		System.out.println("Message sent successfully from"+user.getId());
 		
 		return new ResponseEntity<Message>(sentMessage, HttpStatus.OK);
 		

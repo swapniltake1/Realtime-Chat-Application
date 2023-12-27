@@ -1,5 +1,6 @@
 package com.chatapp.controllers;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chatapp.apiresponse.ApiResponse;
@@ -47,6 +49,14 @@ public class UserController {
 		userService.updateUser(user.getId(), updateUserReq);
 		ApiResponse apiResponse = new ApiResponse("User Updated", true);
 		return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<HashSet<User>> searchByNameHandler(@RequestParam("name") String name) {
+		List<User> searchUser = userService.searchByUserName(name);
+		HashSet<User> setUsr = new HashSet<>(searchUser);
+		
+		return new ResponseEntity<HashSet<User>>(setUsr, HttpStatus.OK);
 	}
 	
 	

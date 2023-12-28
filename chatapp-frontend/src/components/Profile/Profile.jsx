@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { BsArrowLeft, BsCheck, BsCheck2, BsPencil } from 'react-icons/bs';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { updateUser } from '../../Redux/Auth/Action';
 
 const Profile = ({HandleCloseOpenProfile}) => {
     const navigate = useNavigate();
     const [flag, setFlag] = useState(false);
     const [username, setusername] = useState(null);
     const {auth} = useSelector(store=>store);
+    const dispatch = useDispatch();
+    const [tempPicture, setTempPicture] = useState(null);
 
         
 
@@ -21,6 +24,30 @@ const Profile = ({HandleCloseOpenProfile}) => {
 
     const HandleUsernameChange = (e) =>{
          setusername(e.target.value);
+    }
+
+    const uploadToCloudnary=(pics)=>{
+            const data = new FormData();
+            data.append("file", pics);
+            data.append("upload_preset", "muts8jvf");
+            data.append("cloud_name", "def1ublz5");
+            fetch("https://api.cloudinary.com/v1_1/def1ublz5/image/upload", {
+                method:"POST",
+                body:data,
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                setTempPicture(data.url.toString());
+             //   setOpen(true);
+                const data2 = {
+                    id:auth.reqUser.id,
+                    token:localStorage.getItem("token"),
+                    data:{profilePicture: data.url.toString()},
+                };
+                dispatch(updateUser(data2));
+            })
+
+        }
     }
 
 

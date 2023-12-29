@@ -24,8 +24,11 @@ import com.chatapp.request.SingleChatReq;
 import com.chatapp.service.ChatService;
 import com.chatapp.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/api/chats")
+@Slf4j
 public class ChatController {
 
 	@Autowired
@@ -44,7 +47,11 @@ public class ChatController {
 	
 	@PostMapping("/group")
 	public ResponseEntity<Chat> createGroupHandler(@RequestBody GroupChatReq groupChatReq, @RequestHeader("Authorization") String jwt) throws UserException {
+		log.info("Req Received for create grp");
+		
+		System.out.println("Req Received for create grp"+ groupChatReq);
 		User reqUser = userService.findUserByProfile(jwt);
+		
 		Chat chat = chatService.createGroup(groupChatReq, reqUser);
 		
 		return  new ResponseEntity<Chat>(chat, HttpStatus.OK);

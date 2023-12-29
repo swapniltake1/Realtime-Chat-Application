@@ -81,7 +81,12 @@ public class ChatServiceImpl implements ChatService {
 			group.getUsers().add(usersToAddGroup);
 		}
 		
-		return group;
+		System.out.println("Senidng data into database final checkout: "+group);
+		
+		Chat savedChats = chatRepository.save(group);
+		
+		System.out.println("Data Saved to DB "+savedChats);
+		return savedChats;
 	}
 
 	@Override

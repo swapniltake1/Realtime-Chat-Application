@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class GroupChatReq {
 
 	private List<Integer> userIds;
-	
 	private String chatName;
 	private String chatImage;
 }

@@ -22,8 +22,11 @@ import com.chatapp.model.User;
 import com.chatapp.request.UpdateUserReq;
 import com.chatapp.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/api/users")
+@Slf4j
 public class UserController {
 
 	@Autowired
@@ -46,6 +49,7 @@ public class UserController {
 	@PutMapping("/update")
 	public ResponseEntity<ApiResponse> updateUserHandler(@RequestBody UpdateUserReq updateUserReq, @RequestHeader("Authorization") String token) throws UserException {
 		User user = userService.findUserByProfile(token);
+	//	log.info("updating user profile"+user.getFullName());
 		userService.updateUser(user.getId(), updateUserReq);
 		ApiResponse apiResponse = new ApiResponse("User Updated", true);
 		return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.ACCEPTED);

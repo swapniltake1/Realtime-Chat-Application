@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User updateUser(Integer id, UpdateUserReq req) throws UserException {
 		User user = finyById(id);
+	
 		
 		if(req.getFullName()!=null) {
 			user.setFullName(req.getFullName());

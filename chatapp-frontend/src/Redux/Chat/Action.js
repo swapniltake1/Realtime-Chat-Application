@@ -30,11 +30,11 @@ export const createGroupChat =(chatData) => async (dispatch) =>{
                 "Content-Type" : "application/json",
                 Authorization:`Bearer ${chatData.token}`
             },
-            body:JSON.stringify(chatData.data)
+            body:JSON.stringify(chatData.group)
         })
     
         const data = await res.json();
-        console.log("Chat data from server", data);
+        console.log("Create Group Server Response :: ", data);
         dispatch({type:CREATE_GROUP,payload:data});
     } catch (error) {
         console.log("Something went wrong in chat Action (CreateGroupChat) :: UI Error :: ", error);
@@ -53,7 +53,7 @@ export const createGroupChat =(chatData) => async (dispatch) =>{
             })
         
             const data = await res.json();
-            console.log("Chat data from server", data);
+            console.log("Get all chats from server", data);
             dispatch({type:GET_ALL_CHAT,payload:data});
         } catch (error) {
             console.log("Something went wrong in chat Action (CreateGroupChat) :: UI Error :: ", error);

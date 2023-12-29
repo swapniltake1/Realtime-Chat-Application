@@ -11,4 +11,5 @@ public class UpdateUserReq {
 
 	private String fullName;
 	private String profilePicture;
+	
 }

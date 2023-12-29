@@ -55,10 +55,7 @@ export const currentUser = (token) => async (dispatch) => {
     });
 
     const resData = await res.json();
-   /* Object.keys(resData).forEach((key) => {
-        console.log(`Property: ${key}, Value:`, resData[key]);
-      });
-  */
+   console.log("current chat data",resData);
     dispatch({ type: REQ_USER, payload: resData });
   } catch (error) {
     console.error('Fetch current user error:', error);
@@ -88,19 +85,23 @@ export const searchUser = (data) => async (dispatch) => {
 };
 
 export const updateUser = (data) => async (dispatch) => {
+
+  console.log("received data for update req ::",data);
   try {
     const res = await fetch(
-      `${BASE_API_URL}/api/users/update/${data.id}`,
+      `${BASE_API_URL}/api/users/update`,
       {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${data.token}`,
         },
+        
+        body: JSON.stringify(data.data),
       }
     );
-
     const resData = await res.json();
+    console.log("profile updated successfullyyy::: ",resData);
     dispatch({ type: UPDATE_USER, payload: resData });
   } catch (error) {
     console.error('Update user error:', error);

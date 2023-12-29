@@ -4,6 +4,7 @@ const initialValue = {
     chats:[],
     createdGroup:null,
     createdChat:null,
+    
 
 }
 

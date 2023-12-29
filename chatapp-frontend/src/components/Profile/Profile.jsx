@@ -19,36 +19,66 @@ const Profile = ({HandleCloseOpenProfile}) => {
     }
 
     const HandleCheck = () =>{
-        setFlag(false);
+        
+    const data = {
+        id: auth.reqUser.id,
+        token: localStorage.getItem("token"),
+        data: { fullName: username },
+    };
+       setusername(username);
+       dispatch(updateUser(data));
+       setFlag(false);
     }
 
     const HandleUsernameChange = (e) =>{
          setusername(e.target.value);
     }
 
-    const uploadToCloudnary=(pics)=>{
-            const data = new FormData();
-            data.append("file", pics);
-            data.append("upload_preset", "muts8jvf");
-            data.append("cloud_name", "def1ublz5");
-            fetch("https://api.cloudinary.com/v1_1/def1ublz5/image/upload", {
-                method:"POST",
-                body:data,
-            })
-            .then((res) => res.json())
-            .then((data) => {
+    const uploadToCloudnary = (pics) => {
+        const data = new FormData();
+        data.append("file", pics);
+        data.append("upload_preset", "muts8jvf");
+        data.append("cloud_name", "def1ublz5");
+        
+        fetch("https://api.cloudinary.com/v1_1/def1ublz5/image/upload", {
+            method: "POST",
+            body: data,
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data);
+            if (data) {
                 setTempPicture(data.url.toString());
-             //   setOpen(true);
+                
                 const data2 = {
-                    id:auth.reqUser.id,
-                    token:localStorage.getItem("token"),
-                    data:{profilePicture: data.url.toString()},
+                    id: auth.reqUser.id,
+                    token: localStorage.getItem("token"),
+                    data: { profilePicture: data.url.toString() },
                 };
                 dispatch(updateUser(data2));
-            })
+            } else {
+                console.error("Error: URL not found in response data");
+            }
+        })
+        .catch((error) => {
+            console.error("Error uploading to Cloudinary:", error);
+        });
+    };
 
-        }
+   const handleUpdateUsername=(e)=>{
+
+    const data = {
+        id: auth.reqUser.id,
+        token: localStorage.getItem("token"),
+        data: { fullName: username },
+    };
+
+           if(e.key==="Enter"){
+                    dispatch(updateUser(data.data.fullName))
+           }
     }
+    
+    
 
 
   return (
@@ -64,9 +94,9 @@ const Profile = ({HandleCloseOpenProfile}) => {
         <div className="flex flex-col justify-center items-center my-12">
 
             <label htmlFor='ImgInput'>
-                <img className='rounded-full w-[15vw] h-[15vw] cursor-pointer' src="https://cdn.pixabay.com/photo/2017/01/12/21/42/tiger-1975790_640.jpg" alt="" />
+                <img className='rounded-full w-[15vw] h-[15vw] cursor-pointer' src={tempPicture ||  auth.reqUser?.profilePicture || tempPicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} alt="" />
             </label>
-            <input type="file" id='ImgInput' className='hidden' />
+            <input onChange={(e)=>  uploadToCloudnary(e.target.files[0])} type="file" id='ImgInput' className='hidden' />
 
         </div>
 
@@ -78,7 +108,7 @@ const Profile = ({HandleCloseOpenProfile}) => {
 
             { !flag &&
             <div className='w-full flex justify-between items-center'>
-                <p className=' px-3 py-3'>{ auth.reqUser?.fullName || "Swapniltake1"}</p>
+                <p className=' px-3 py-3'>{ username ||  auth.reqUser?.fullName}</p>
                 <BsPencil onClick={HandleFlag} className='cursor-pointer mr-3' />
             </div>
                }
@@ -86,7 +116,7 @@ const Profile = ({HandleCloseOpenProfile}) => {
                {
                 flag && 
                 <div className='w-full flex items-center justify-between py-2'> 
-                    <input onChange={HandleUsernameChange} className='ml-3 w-[80%] outline-none border-b-2 border-orange-700 p-2' type="text" placeholder='Enter your Name ' />
+                    <input onKeyPress={handleUpdateUsername} onChange={HandleUsernameChange} className='ml-3 w-[80%] outline-none border-b-2 border-orange-700 p-2' type="text" placeholder='Enter your Name ' />
                     <BsCheck2 onClick={HandleCheck} className='cursor-pointer text-2xl mr-3' />
                 </div>
                }

@@ -5,7 +5,7 @@ const ChatCard = ({userImg, name }) => {
     <div className='flex items-center justify-center py-2 group cursor-pointer'>
         
         <div className='w-[20%]'>
-       <img className='h-14 w-14 rounded-full' src={ userImg } alt="profilepic" />
+       <img className='h-14 w-14 rounded-full' src={ userImg || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" } alt="profilepic" />
        </div>
 
     

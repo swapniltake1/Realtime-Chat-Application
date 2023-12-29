@@ -98,11 +98,11 @@ const Homepage = () => {
 
     useEffect(() => {
         if (token && !auth.reqUser) {
-            console.log("Getting your Profile.....");
+            console.log("Getting your Profile.....", auth);
             dispatch(currentUser(token));
         }
 
-    }, [token, dispatch, auth.reqUser]);
+    }, [token, dispatch, auth, auth.reqUser]);
 
     useEffect(() => {
         if(auth.reqUser===null){
@@ -113,6 +113,7 @@ const Homepage = () => {
         }
     }, [auth.reqUser, navigate]);
 
+    console.log("UI Refreshed :: " , auth);
 
 
 
@@ -131,7 +132,7 @@ const Homepage = () => {
 
                     <div className='left w-[30%] h-full bg-[#e8e9ec]'>
                         {/* profile added here  */}
-                        {isGroup && <CreateGroup />}
+                        {isGroup && <CreateGroup setIsGroup={setIsGroup} />}
 
                         {isprofile &&
                             <div className='w-full h-full'>
@@ -154,7 +155,7 @@ const Homepage = () => {
                                     <div onClick={HandleNavigate} className='flex items-center space-x-3'>
                                         <img
                                             className='rounded-full w-10 h-10 cursor-pointer'
-                                            src="https://cdn.pixabay.com/photo/2018/03/27/21/43/startup-3267505_640.jpg"
+                                            src={auth.reqUser?.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" }
                                             alt="profile"
                                         />
                                         <p>{auth.reqUser?.fullName}</p>
@@ -224,28 +225,32 @@ const Homepage = () => {
                                         </div>
                                     ))}
 
-                                    {chat.chats.length > 0 && !query && chat.chats?.map((item) => (
-                                        <div onClick={() => HandleCurrentChat(item)}>
-                                            <hr />
+{chat.chats.length > 0 && !query && chat.chats?.map((item) => (
+    <div onClick={() => HandleCurrentChat(item)} key={item.id}>
+        <hr />
+        {!item.isGroup ? (
+            <ChatCard
+                name={item.chatName} // Display group name for group chats
+                userImg={item.chatImg || "https://cdn.pixabay.com/photo/2017/11/10/05/46/group-2935521_1280.png"}
+            />
+        ) : (
+            <ChatCard
+                name={
+                    auth.reqUser?.id !== item.users[2]?.id
+                        ? item.users[0].fullName
+                        : item.users[1].fullName
+                }
+                userImg={
+                    // Display user's profile picture for individual chats
+                    auth.reqUser.id !== item.users[0].id
+                        ? item.users[0].profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                        : item.users[1].profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                }
+            />
+        )}
+    </div>
+))}
 
-                                            {item.isGroup ? (
-                                                <ChatCard name={item.chatName} userImg={item.chatImg || "https://cdn.pixabay.com/photo/2017/11/10/05/46/group-2935521_1280.png"} />
-                                            ) : (
-                                                <ChatCard
-                                                    name={auth.reqUser?.id !== item.users[0]?.id
-                                                        ? item.users[0].fullName
-                                                        : item.users[1].fullName
-                                                    }
-
-                                                    userImg={auth.reqUser.id !== item.users[0].id
-                                                        ? item.users[0].profilePicture ||
-                                                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                                                        : item.users[1].profilePicture ||
-                                                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                                                    }
-                                                />)}
-                                        </div>
-                                    ))}
                                 </div>
                             </div>
                         }

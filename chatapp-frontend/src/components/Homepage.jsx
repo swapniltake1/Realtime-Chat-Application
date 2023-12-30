@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TbCircleDashed } from "react-icons/tb";
 import { BiCommentDetail } from "react-icons/bi";
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -10,12 +10,13 @@ import { useNavigate } from 'react-router-dom';
 import Profile from './Profile/Profile';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Button from '@mui/material/Button';
 import CreateGroup from './Group/CreateGroup';
 import { useDispatch, useSelector } from 'react-redux';
 import { currentUser, logoutUser, searchUser } from '../Redux/Auth/Action';
 import { createChat, getUserChat } from '../Redux/Chat/Action';
 import { createMessage, getAllMessages } from '../Redux/Message/Action';
+import SockJS from 'sockjs-client';
+import { over } from 'stompjs';
 
 
 const Homepage = () => {
@@ -30,6 +31,88 @@ const Homepage = () => {
     const dispatch = useDispatch();
     const { auth, chat, message } = useSelector(store => store);
     const token = localStorage.getItem("token");
+    const [stompClient, setStompClient] = useState();
+    const [isConnected, setIsConnected] = useState(false);
+    const [messages, setMessages] = useState([]);
+
+    const connect = () => {
+        const socket = new SockJS("http://localhost:8080/ws");
+        const temp = over(socket);
+        setStompClient(temp);
+
+        const headers = {
+            Authorization: `Bearer ${token}`,
+            "X-XSRF-TOKEN": getcookies("XSRF-TOKEN")
+        }
+
+        temp.connect(headers, onConnect, onError)
+
+        
+    }
+
+    function getcookies(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(` ; ${name}=`);
+
+        if (parts.length === 2) {
+            return parts.pop.split(";").shift();
+        }
+    }
+
+    const onError = (error) => {
+        console.log("On Error : ", error)
+    }
+
+    const onConnect = () => {
+        console.log("WebSocket Connected :: ");
+        setIsConnected(true);
+    }
+
+    useEffect(() => {
+
+        if (message.newMessage && stompClient) {
+            setMessages([...messages, message.newMessage]);
+            stompClient?.send("/app/message", {}, JSON.stringify(message.newMessage));
+        }
+    }, [message.newMessage]);
+
+
+
+
+    const onMessageReceiver = (payload) => {
+        console.log("Received Messages::::::::::::", JSON.parse(payload.body));
+
+        const receivedMessage = JSON.parse(payload.body);
+        setMessages([...messages, receivedMessage])
+    }
+
+    useEffect(() => {
+    if (isConnected && stompClient && auth.reqUser && currentChat) {
+        const subscription = stompClient.subscribe(
+            "/group" + currentChat.id.toString(), onMessageReceiver
+        );
+
+        return () => {
+            subscription.unsubscribe();
+        };
+    }
+}, []);
+
+    
+
+    useEffect(() => {
+        connect();
+    }, [])
+
+    useEffect(() => {
+       setMessages(message.messages)
+    }, [message.messages]);
+    
+
+    
+
+
+
 
 
     const handleSearch = (keyword) => {
@@ -47,7 +130,7 @@ const Homepage = () => {
 
     const handleCreateNewMessage = () => {
         dispatch(createMessage({ token, data: { chatId: currentChat.id, content: content } }));
-        console.log("message created..", content);
+      //  console.log("message created..", content);
 
     }
 
@@ -84,12 +167,12 @@ const Homepage = () => {
     }
 
     useEffect(() => {
-        console.log('getting your chats');
+       // console.log('getting your chats');
         dispatch(getUserChat({ token }))
     }, [chat.createdChat, dispatch, token, chat.createdGroup, message.newMessage]);
 
     useEffect(() => {
-        console.log("getting your All groups & Chat ", currentChat);
+       // console.log("getting your All groups & Chat ", currentChat);
         if (currentChat?.id) {
             dispatch(getAllMessages({ chatId: currentChat.id, token }));
         }
@@ -98,7 +181,7 @@ const Homepage = () => {
 
     useEffect(() => {
         if (token && !auth.reqUser) {
-            console.log("Getting your Profile.....", auth);
+           // console.log("Getting your Profile.....", auth);
             dispatch(currentUser(token));
         }
 
@@ -113,21 +196,23 @@ const Homepage = () => {
         }
     }, [auth.reqUser, navigate]);
 
-    console.log("UI Refreshed :: ", auth, chat, message);
+    console.log("Messages ",messages);
 
-  /*  console.log("users chat log", chat.chats);
+   // console.log("UI Refreshed :: ", auth, chat, message);
 
-    function logChatInformation() {
-        if (chat.chats.length > 0 && !query && chat.chats) {
-            chat.chats.forEach((item) => {
-                console.log("items", item);
-            });
-        }
-    }
-
-    useEffect(() => {
-        logChatInformation();
-    }, []);  */
+    /*  console.log("users chat log", chat.chats);
+  
+      function logChatInformation() {
+          if (chat.chats.length > 0 && !query && chat.chats) {
+              chat.chats.forEach((item) => {
+                  console.log("items", item);
+              });
+          }
+      }
+  
+      useEffect(() => {
+          logChatInformation();
+      }, []);  */
 
 
 
@@ -321,7 +406,7 @@ const Homepage = () => {
 
                                 <div className='px-10 h-[85vh] overflow-y-auto bg-gray-100'>
                                     <div className='space-y-1 flex flex-col justify-center border-none mt-20 py-2'>
-                                        {message.messages.map((item) => (
+                                        { messages?.map((item) => (
                                             <MessageCard
                                                 content={item.content}
                                                 isReqUserMessage={item.user.id !== auth.reqUser.id} />

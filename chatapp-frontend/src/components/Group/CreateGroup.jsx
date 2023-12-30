@@ -55,7 +55,7 @@ const CreateGroup = ({ setIsGroup }) => {
                                 value={query}
                                 className='outline-none border-b border-[#8888] p-2 w-[93%]' placeholder='Search your contacts' />
                         </div >
-                        <div className='bg-white overflow-y-auto h-[50.2vh]'>
+                        <div className='bg-white overflow-y-auto h-[38vh]'>
                             {
                                 query && auth.searchUser?.map((item) =>
                                     <div onClick={() => {
@@ -72,26 +72,21 @@ const CreateGroup = ({ setIsGroup }) => {
                         </div>
 
                         <div className='bottom-10 py-10 bg-slate-200 flex items-center justify-center '>
-                            <div className='bg-blue-500 rounded-full p-4 cursor-pointer ' onClick={() => {
-                                setNewGroup(true);
+    <div className='bg-blue-500 rounded-full cursor-pointer overflow-hidden '>
+        <BsArrowRight className='text-white font-bold text-6xl'
+            onClick={() => {
+                setNewGroup(true);
+            }} />
+    </div>
+</div>
 
-                            }}>
-                                <BsArrowRight className='text-white font-bold text-6-xl'
-                                    onClick={() => {
-                                        setNewGroup(true)
-                                    }} />
-                            </div>
-
-                        </div>
                     </div>
 
                 )}
 
-                {
-
+                {newGroup && (
                     <NewGroup groupMember={groupMember} setIsGroup={setIsGroup} />
-
-                }
+                )}
             </div>
         </>
     )

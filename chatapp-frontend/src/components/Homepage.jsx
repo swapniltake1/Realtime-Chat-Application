@@ -43,11 +43,11 @@ const Homepage = () => {
         setQuery("");
     }
 
-    
+
 
     const handleCreateNewMessage = () => {
-        dispatch(createMessage({token, data:{chatId:currentChat.id,content:content}}));
-        console.log("message created.." , content);
+        dispatch(createMessage({ token, data: { chatId: currentChat.id, content: content } }));
+        console.log("message created..", content);
 
     }
 
@@ -84,14 +84,14 @@ const Homepage = () => {
     }
 
     useEffect(() => {
-        console.log('getting user chAT');
+        console.log('getting your chats');
         dispatch(getUserChat({ token }))
     }, [chat.createdChat, dispatch, token, chat.createdGroup, message.newMessage]);
 
     useEffect(() => {
-        console.log("getting currentUser Chat ", currentChat.id);
-        if(currentChat?.id){
-        dispatch(getAllMessages({chatId:currentChat.id, token }));
+        console.log("getting your All groups & Chat ", currentChat);
+        if (currentChat?.id) {
+            dispatch(getAllMessages({ chatId: currentChat.id, token }));
         }
     }, [currentChat, dispatch, token, message.newMessage]);
 
@@ -105,7 +105,7 @@ const Homepage = () => {
     }, [token, dispatch, auth, auth.reqUser]);
 
     useEffect(() => {
-        if(auth.reqUser===null){
+        if (auth.reqUser === null) {
             navigate("/signin");
         }
         if (auth.reqUser?.fullName) {
@@ -113,7 +113,23 @@ const Homepage = () => {
         }
     }, [auth.reqUser, navigate]);
 
-    console.log("UI Refreshed :: " , auth);
+    console.log("UI Refreshed :: ", auth, chat, message);
+
+  /*  console.log("users chat log", chat.chats);
+
+    function logChatInformation() {
+        if (chat.chats.length > 0 && !query && chat.chats) {
+            chat.chats.forEach((item) => {
+                console.log("items", item);
+            });
+        }
+    }
+
+    useEffect(() => {
+        logChatInformation();
+    }, []);  */
+
+
 
 
 
@@ -155,7 +171,7 @@ const Homepage = () => {
                                     <div onClick={HandleNavigate} className='flex items-center space-x-3'>
                                         <img
                                             className='rounded-full w-10 h-10 cursor-pointer'
-                                            src={auth.reqUser?.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" }
+                                            src={auth.reqUser?.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                                             alt="profile"
                                         />
                                         <p>{auth.reqUser?.fullName}</p>
@@ -225,31 +241,30 @@ const Homepage = () => {
                                         </div>
                                     ))}
 
-{chat.chats.length > 0 && !query && chat.chats?.map((item) => (
-    <div onClick={() => HandleCurrentChat(item)} key={item.id}>
-        <hr />
-        {!item.isGroup ? (
-            <ChatCard
-                name={item.chatName} // Display group name for group chats
-                userImg={item.chatImg || "https://cdn.pixabay.com/photo/2017/11/10/05/46/group-2935521_1280.png"}
-            />
-        ) : (
-            <ChatCard
-                name={
-                    auth.reqUser?.id !== item.users[2]?.id
-                        ? item.users[0].fullName
-                        : item.users[1].fullName
-                }
-                userImg={
-                    // Display user's profile picture for individual chats
-                    auth.reqUser.id !== item.users[0].id
-                        ? item.users[0].profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                        : item.users[1].profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                }
-            />
-        )}
-    </div>
-))}
+                                    {chat.chats.length > 0 && !query && chat.chats?.map((item) => (
+                                        <div onClick={() => HandleCurrentChat(item)} key={item.id}>
+                                            <hr />
+                                            {item.group ? (
+
+                                                <ChatCard
+                                                    name={item.chatName}
+                                                    userImg={item.chatImg || "https://cdn.pixabay.com/photo/2017/11/10/05/46/group-2935521_1280.png"}
+                                                />
+                                            ) : (
+                                                <ChatCard
+                                                    name={auth.reqUser.id !== item.users[0].id
+                                                        ? item.users[0].fullName
+                                                        : item.users[1].fullName
+                                                    }
+                                                    userImg={
+                                                        auth.reqUser.id !== item.users[0].id
+                                                            ? item.users[0].profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                                                            : item.users[1].profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+                                    ))}
 
                                 </div>
                             </div>
@@ -281,13 +296,17 @@ const Homepage = () => {
                                     <div className='flex justify-between'>
 
                                         <div className='py-3 space-x-4 flex items-center px-3'>
-                                            <img className='w-10 h-10 rounded-full' src={ currentChat.isGroup? currentChat.chatImg :   (auth.reqUser.id !== currentChat.users[0].id
-                                                ? currentChat.users[0].profilePicture ||
-                                                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                                                : currentChat.users[1].profilePicture ||
-                                                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")} alt="card chat img" />
+
+                                            <img className='w-10 h-10 rounded-full'
+                                                src={currentChat.group ? currentChat.chatImg ||
+                                                    "https://cdn.pixabay.com/photo/2017/11/10/05/46/group-2935521_1280.png"
+                                                    : (auth.reqUser.id !== currentChat.users[0].id
+                                                        ? currentChat.users[0].profilePicture ||
+                                                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                                                        : currentChat.users[1].profilePicture ||
+                                                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")} alt="card chat img" />
                                             <p>
-                                                {currentChat.isGroup? currentChat.chatName : (auth.reqUser?.id === currentChat.users[0].id ? currentChat.users[1].fullName : currentChat.users[0].fullName)}
+                                                {currentChat.group ? currentChat.chatName : (auth.reqUser?.id === currentChat.users[0].id ? currentChat.users[1].fullName : currentChat.users[0].fullName)}
                                             </p>
                                         </div>
 
@@ -302,10 +321,10 @@ const Homepage = () => {
 
                                 <div className='px-10 h-[85vh] overflow-y-auto bg-gray-100'>
                                     <div className='space-y-1 flex flex-col justify-center border-none mt-20 py-2'>
-                                        { message.messages.map((item) => (
-                                            <MessageCard 
-                                            content={item.content} 
-                                            isReqUserMessage={item.user.id!==auth.reqUser.id} />
+                                        {message.messages.map((item) => (
+                                            <MessageCard
+                                                content={item.content}
+                                                isReqUserMessage={item.user.id !== auth.reqUser.id} />
                                         ))}
                                     </div>
                                 </div>

@@ -114,7 +114,7 @@ const NewGroup = ({groupMember, setIsGroup}) => {
             {groupName &&
                 <div className='py-10 bg-slate-200 flex items-center justify-center'>
                     <Button style={{ borderRadius: '50%' }} onClick={handleCreateGroup}>
-                        <div className='bg-[#5bf37a] rounded-full p-4'>
+                        <div className='bg-[#4fc7fa] rounded-full p-4'>
                             <BsCheck2 className='text-white font-bold text-3xl' />
                         </div>
                     </Button>

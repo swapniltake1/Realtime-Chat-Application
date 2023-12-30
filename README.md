@@ -73,6 +73,7 @@ Welcome to the Realtime Chat Application! This project is a full-fledged messagi
 
    <br/>
    ![image](https://github.com/swapniltake1/Realtime-Chat-Application/assets/61576958/fd7e4bfb-16ee-4b44-b740-5339afc8b10d)
+   
 
    ![image](https://github.com/swapniltake1/Realtime-Chat-Application/assets/61576958/7952b2f4-b4e5-4c34-bda6-45d26a9179b6)
 
